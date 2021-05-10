@@ -1,14 +1,14 @@
-import { Grid } from "@material-ui/core";
 import React from "react";
 import { constants, ConstantsType } from "../constants";
-import { MyCard } from "./MyCard";
+import { Grid } from "@material-ui/core";
+import { ProductsPageCard } from "../Components/ProductsPageCard";
 
-export const Content: React.FC<ConstantsType> = (props) => {
-  const cardItem = (data: ConstantsType) => {
+const ProductsPage: React.FC = () => {
+  const cardItem = (data: ConstantsType, index: number) => {
     const { title, price, description, avatarUrl, imageUrl } = data;
     return (
-      <Grid item xs={12} sm={6}>
-        <MyCard
+      <Grid key={index} item xs={12} sm={6}>
+        <ProductsPageCard
           title={title}
           price={price}
           description={description}
@@ -21,7 +21,9 @@ export const Content: React.FC<ConstantsType> = (props) => {
 
   return (
     <Grid container direction="row" spacing={2}>
-      {constants.map((items) => cardItem(items))}
+      {constants.map((items, index) => cardItem(items, index))}
     </Grid>
   );
 };
+
+export default ProductsPage;
