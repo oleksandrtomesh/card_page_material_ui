@@ -1,21 +1,21 @@
 import { Grid } from "@material-ui/core";
 import React from "react";
 import CartPageCard from "../Components/CartPageCard";
+import { constants } from "../constants";
+import { OrderForm } from "../Components/OrderForm";
 
 const CartPage: React.FC = () => {
-  const items = [0, 1, 2, 3, 4, 5, 6, 7];
-
   return (
     <Grid container direction="row" spacing={3}>
-      <Grid container item sm={9} spacing={2}>
-        {items.map((i) => (
+      <Grid container item sm={8} spacing={2}>
+        {constants.map((dataConst, index) => (
           <Grid item xs={12}>
-            <CartPageCard />
+            <CartPageCard data={dataConst} />
           </Grid>
         ))}
       </Grid>
-      <Grid item xs={12} sm={3}>
-        Order form
+      <Grid item xs={12} sm={4}>
+        <OrderForm />
       </Grid>
     </Grid>
   );

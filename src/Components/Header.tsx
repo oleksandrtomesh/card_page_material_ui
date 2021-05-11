@@ -2,7 +2,7 @@ import { AppBar, IconButton, Toolbar, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/styles";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const useStyles = makeStyles(() => ({
@@ -16,18 +16,17 @@ const useStyles = makeStyles(() => ({
 
 export const Header: React.FC = React.memo(() => {
   const classes = useStyles();
+  const history = useHistory();
   const [pathName, setPathName] = useState("");
-  useEffect(() => setPathName(window.location.pathname.slice(1)), []);
+  useEffect(() => setPathName(history.location.pathname), []);
 
-  const changePathName = () => setPathName(window.location.pathname.slice(1));
-
-  console.log(pathName);
+  const changePathName = () => setPathName(history.location.pathname);
 
   return (
     <AppBar position="static">
       <Toolbar>
         <Typography className={classes.typographyStyles}>Header</Typography>
-        {pathName === "cart" ? (
+        {pathName === "/cart" ? (
           <IconButton onClick={changePathName}>
             <NavLink to="products">
               <ArrowBackIcon className={classes.shopingCartStyles} />
