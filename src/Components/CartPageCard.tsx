@@ -8,10 +8,9 @@ import {
   makeStyles,
   Typography
 } from "@material-ui/core";
-
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import { ConstantsType } from "../constants";
+import { CartProductType } from "../lib/reducers/cartReducer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const CartPageCard: React.FC<{ data: ConstantsType }> = ({ data }) => {
-  const { title, price, description, imageUrl } = data;
+const CartPageCard: React.FC<{ data: CartProductType }> = ({ data }) => {
+  const { title, price, description, imageUrl, quantity } = data;
   const classes = useStyles();
   return (
     <Card variant="outlined" className={classes.root}>
@@ -51,7 +50,7 @@ const CartPageCard: React.FC<{ data: ConstantsType }> = ({ data }) => {
           <IconButton size="medium">
             <RemoveIcon />
           </IconButton>
-          <Typography>quantity</Typography>
+          <Typography>{quantity}</Typography>
           <IconButton size="medium">
             <AddIcon />
           </IconButton>

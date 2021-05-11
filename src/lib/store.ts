@@ -1,8 +1,10 @@
 import { combineReducers, createStore } from "redux";
 import { cartReducer } from "./reducers/cartReducer";
+import { headerReducer } from "./reducers/headerReducer";
 
 let rootReducer = combineReducers({
-  cartPage: cartReducer
+  cartPage: cartReducer,
+  header: headerReducer
 });
 
 type RootReducerType = typeof rootReducer;
