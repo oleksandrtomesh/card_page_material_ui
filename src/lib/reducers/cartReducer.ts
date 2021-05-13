@@ -1,34 +1,27 @@
 import { ConstantsType } from "../../constants";
 
 const initialState = {
-  cartProducts: [
-    {
-      title: "Keurig K-Duo",
-      price: "$149.99",
-      quantity: 1,
-      description:
-        "Use both ground coffee and k-cup pods. Multiple brew sizes: brew an 8, 10, or 12-cup carafe and an 237, 296, or 355ml (8, 10, or 12 oz. ) cup ",
-      avatarUrl:
-        "https://upload.wikimedia.org/wikipedia/commons/e/e0/Keurig_Logo.png",
-      imageUrl:
-        "https://images-na.ssl-images-amazon.com/images/I/61-KUPluVYL._AC_SL1500_.jpg"
-    },
-    {
-      title: "KRUPS Electric Spice",
-      price: "$19.99",
-      quantity: 1,
-      description:
-        "Large grinding capacity yields ground coffee for up to 12 cups of coffee",
-      avatarUrl:
-        "https://images-na.ssl-images-amazon.com/images/I/81CbxNLCHCL._AC_SL1500_.jpg",
-      imageUrl:
-        "https://images-na.ssl-images-amazon.com/images/I/71FhMLBP9XL._AC_SL1500_.jpg"
-    }
-  ] as CartProductType[],
+  cartProducts: [] as CartProductType[],
   totalPrice: 0
 };
 
 type initialStateType = typeof initialState;
+
+const changeTotalPrice = (
+  prevTotalPrice: number,
+  itemPrice: string,
+  action: "increase" | "decrease"
+): number => {
+  if (action === "increase") {
+    return (
+      Math.floor((prevTotalPrice + Number(itemPrice.slice(1))) * 100) / 100
+    );
+  } else {
+    return (
+      Math.floor((prevTotalPrice - Number(itemPrice.slice(1))) * 100) / 100
+    );
+  }
+};
 
 export const cartReducer = (
   state = initialState,
@@ -54,7 +47,11 @@ export const cartReducer = (
             })
           : //if added new product, push it at start of array
             [cartProduct, ...state.cartProducts],
-        totalPrice: state.totalPrice + Number(action.product.price)
+        totalPrice: changeTotalPrice(
+          state.totalPrice,
+          action.product.price,
+          "increase"
+        )
       };
     case "app/cart-reducer/CHANGE-QUANTITY":
       return {
@@ -75,8 +72,15 @@ export const cartReducer = (
             return p;
           })
           //if quantity < 0 delete item from cartProducts
-          .filter((p) => p.quantity > 0)
+          .filter((p) => p.quantity > 0),
+        totalPrice:
+          action.action === "increase"
+            ? changeTotalPrice(state.totalPrice, action.price, "increase")
+            : changeTotalPrice(state.totalPrice, action.price, "decrease") < 1
+            ? state.totalPrice * 0
+            : changeTotalPrice(state.totalPrice, action.price, "decrease")
       };
+
     default:
       return state;
   }
