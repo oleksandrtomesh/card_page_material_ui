@@ -18,12 +18,12 @@ export const ProductsPageCard: React.FC<ConstantsType> = (props) => {
   const changePathName = () => {
     dispatch(headerActions.pathChanged("/cart"));
   };
-  const addProductToCart = (props: ConstantsType) => {
+  const addProductToCart = () => {
     dispatch(cartActions.productAdded(props));
   };
   const buyNow = () => {
     changePathName();
-    addProductToCart(props);
+    addProductToCart();
   };
 
   return (
@@ -43,12 +43,14 @@ export const ProductsPageCard: React.FC<ConstantsType> = (props) => {
         <Typography component="p">{description}</Typography>
       </CardContent>
       <CardActions>
-        <NavLink to="/cart">
+        <NavLink to="/cart" style={{ textDecoration: "none" }}>
           <Button size="small" onClick={buyNow}>
             Buy Now
           </Button>
         </NavLink>
-        <Button size="small">Add to cart</Button>
+        <Button size="small" onClick={addProductToCart}>
+          Add to cart
+        </Button>
       </CardActions>
     </Card>
   );

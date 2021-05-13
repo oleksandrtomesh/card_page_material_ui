@@ -10,7 +10,8 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import { CartProductType } from "../lib/reducers/cartReducer";
+import { cartActions, CartProductType } from "../lib/reducers/cartReducer";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 const CartPageCard: React.FC<{ data: CartProductType }> = ({ data }) => {
   const { title, price, description, imageUrl, quantity } = data;
   const classes = useStyles();
+  const dispatch = useDispatch();
   return (
     <Card variant="outlined" className={classes.root}>
       <CardMedia
@@ -47,11 +49,21 @@ const CartPageCard: React.FC<{ data: CartProductType }> = ({ data }) => {
           {description}
         </Typography>
         <CardActions className={classes.actions}>
-          <IconButton size="medium">
+          <IconButton
+            size="medium"
+            onClick={() =>
+              dispatch(cartActions.changeQuantity(title, price, "decrease"))
+            }
+          >
             <RemoveIcon />
           </IconButton>
           <Typography>{quantity}</Typography>
-          <IconButton size="medium">
+          <IconButton
+            size="medium"
+            onClick={() =>
+              dispatch(cartActions.changeQuantity(title, price, "increase"))
+            }
+          >
             <AddIcon />
           </IconButton>
         </CardActions>

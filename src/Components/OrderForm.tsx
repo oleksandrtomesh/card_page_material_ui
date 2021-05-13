@@ -6,6 +6,8 @@ import {
   Typography
 } from "@material-ui/core";
 import React from "react";
+import { useSelector } from "react-redux";
+import { getTotalPrice } from "../lib/selectors/selectors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +23,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const OrderForm: React.FC = () => {
   const classes = useStyles();
+  const totalPrice = useSelector(getTotalPrice);
   return (
     <Paper className={classes.root} variant="outlined">
       <Typography variant="h6" align="center">
@@ -74,6 +77,9 @@ export const OrderForm: React.FC = () => {
         variant="outlined"
         size="small"
       />
+      <Typography variant="overline" className={classes.textarea}>
+        total price: {totalPrice}{" "}
+      </Typography>
       <Button className={classes.textarea} variant="outlined">
         Order
       </Button>

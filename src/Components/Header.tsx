@@ -1,4 +1,11 @@
-import { AppBar, IconButton, Toolbar, Typography } from "@material-ui/core";
+import {
+  AppBar,
+  Badge,
+  Button,
+  IconButton,
+  Toolbar,
+  Typography
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { makeStyles } from "@material-ui/styles";
@@ -6,7 +13,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useDispatch, useSelector } from "react-redux";
 import { headerActions } from "../lib/reducers/headerReducer";
-import { getPathName } from "../lib/selectors/selectors";
+import { getCartProducts, getPathName } from "../lib/selectors/selectors";
 
 const useStyles = makeStyles(() => ({
   typographyStyles: {
@@ -22,6 +29,7 @@ export const Header: React.FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const pathName = useSelector(getPathName);
+  const cartProductsLenghth = useSelector(getCartProducts).length;
   console.log(pathName);
   //const [pathName, setPathName] = useState("");
   //useEffect(() => setPathName(history.location.pathname), [
@@ -34,25 +42,35 @@ export const Header: React.FC = () => {
       <Toolbar>
         <Typography className={classes.typographyStyles}>Header</Typography>
         {pathName === "/cart" ? (
-          <IconButton
+          <Button
+            startIcon={<ArrowBackIcon className={classes.shopingCartStyles} />}
             onClick={() =>
               dispatch(headerActions.pathChanged(history.location.pathname))
             }
           >
-            <NavLink to="/products">
-              <ArrowBackIcon className={classes.shopingCartStyles} />
+            <NavLink to="/products" style={{ textDecoration: "none" }}>
+              <Typography className={classes.shopingCartStyles}>
+                back to products
+              </Typography>
             </NavLink>
-          </IconButton>
+          </Button>
         ) : (
-          <IconButton
+          <Button
+            startIcon={
+              <Badge badgeContent={cartProductsLenghth} color="secondary">
+                <ShoppingCartIcon className={classes.shopingCartStyles} />
+              </Badge>
+            }
             onClick={() =>
               dispatch(headerActions.pathChanged(history.location.pathname))
             }
           >
-            <NavLink to="/cart">
-              <ShoppingCartIcon className={classes.shopingCartStyles} />
+            <NavLink to="/cart" style={{ textDecoration: "none" }}>
+              <Typography className={classes.shopingCartStyles}>
+                GO TO CART
+              </Typography>
             </NavLink>
-          </IconButton>
+          </Button>
         )}
       </Toolbar>
     </AppBar>

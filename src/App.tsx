@@ -1,9 +1,8 @@
 import ProductsPage from "./Pages/ProductsPage";
 import CartPage from "./Pages/CartPage";
-import { BrowserRouter, Redirect, Route, useHistory } from "react-router-dom";
+import { Redirect, Route } from "react-router-dom";
 import { Grid } from "@material-ui/core";
 import { Header } from "./Components/Header";
-import { useEffect, useState } from "react";
 
 export default function App() {
   return (

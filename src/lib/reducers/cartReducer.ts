@@ -5,7 +5,7 @@ const initialState = {
     {
       title: "Keurig K-Duo",
       price: "$149.99",
-      quantity: 0,
+      quantity: 1,
       description:
         "Use both ground coffee and k-cup pods. Multiple brew sizes: brew an 8, 10, or 12-cup carafe and an 237, 296, or 355ml (8, 10, or 12 oz. ) cup ",
       avatarUrl:
@@ -16,7 +16,7 @@ const initialState = {
     {
       title: "KRUPS Electric Spice",
       price: "$19.99",
-      quantity: 0,
+      quantity: 1,
       description:
         "Large grinding capacity yields ground coffee for up to 12 cups of coffee",
       avatarUrl:
@@ -24,24 +24,58 @@ const initialState = {
       imageUrl:
         "https://images-na.ssl-images-amazon.com/images/I/71FhMLBP9XL._AC_SL1500_.jpg"
     }
-  ] as CartProductType[]
+  ] as CartProductType[],
+  totalPrice: 0
 };
 
 type initialStateType = typeof initialState;
 
 export const cartReducer = (
   state = initialState,
-  action: any
+  action: CartActionsType
 ): initialStateType => {
   switch (action.type) {
     case "app/cart-reducer/PRODUCT-ADDED":
       const cartProduct = {
         ...action.product,
-        quantity: 0
+        quantity: 1
       };
       return {
         ...state,
-        cartProducts: [...state.cartProducts, cartProduct]
+        //increase quantity to one if is product in array
+        cartProducts: state.cartProducts.some(
+          (p) => p.title === cartProduct.title
+        )
+          ? state.cartProducts.map((p) => {
+              if (p.title === cartProduct.title) {
+                return { ...p, quantity: p.quantity + 1 };
+              }
+              return p;
+            })
+          : //if added new product, push it at start of array
+            [cartProduct, ...state.cartProducts],
+        totalPrice: state.totalPrice + Number(action.product.price)
+      };
+    case "app/cart-reducer/CHANGE-QUANTITY":
+      return {
+        ...state,
+        cartProducts: state.cartProducts
+          .map((p) => {
+            if (
+              p.title === action.productTytle &&
+              action.action === "increase"
+            ) {
+              return { ...p, quantity: p.quantity + 1 };
+            } else if (
+              p.title === action.productTytle &&
+              action.action === "decrease"
+            ) {
+              return { ...p, quantity: p.quantity - 1 };
+            }
+            return p;
+          })
+          //if quantity < 0 delete item from cartProducts
+          .filter((p) => p.quantity > 0)
       };
     default:
       return state;
@@ -53,6 +87,17 @@ export const cartActions = {
     ({
       type: "app/cart-reducer/PRODUCT-ADDED",
       product
+    } as const),
+  changeQuantity: (
+    productTytle: string,
+    price: string,
+    action: "increase" | "decrease"
+  ) =>
+    ({
+      type: "app/cart-reducer/CHANGE-QUANTITY",
+      productTytle,
+      price,
+      action
     } as const)
 };
 
@@ -66,3 +111,11 @@ export type CartProductType = {
   avatarUrl: string;
   imageUrl: string;
 };
+
+export type InferActionsType<T> = T extends {
+  [key: string]: (...args: any) => infer U;
+}
+  ? U
+  : never; //return action type
+
+export type CartActionsType = InferActionsType<typeof cartActions>;
